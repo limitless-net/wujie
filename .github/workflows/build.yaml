@@ -19,7 +19,7 @@ jobs:
       matrix:
         include:
           - platform: windows
-            os: self-hosted
+            os: windows-latest
             arch: amd64
           # - platform: windows
           #   os: windows-11-arm
@@ -173,19 +173,13 @@ jobs:
           channel: 'master'
           cache: true
       - name: Setup Flutter
-        if: ${{ !(startsWith(matrix.os, 'windows-11-arm') || startsWith(matrix.os, 'ubuntu-24.04-arm') || matrix.os == 'self-hosted') }}
+        if: ${{ !(startsWith(matrix.os, 'windows-11-arm') || startsWith(matrix.os, 'ubuntu-24.04-arm')) }}
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
       
-      - name: Use Local Flutter (Self-hosted Windows)
-        if: matrix.os == 'self-hosted' && startsWith(matrix.platform, 'windows')
-        shell: bash
-        run: |
-          echo "Using local Flutter installation"
-          flutter --version
-          flutter doctor
+      # Self-hosted Flutter step removed - using subosito/flutter-action instead
       #          flutter-version: 3.29.3
 
       - name: Get Flutter Dependency
