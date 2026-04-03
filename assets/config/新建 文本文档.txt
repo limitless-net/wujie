@@ -1,0 +1,120 @@
+xboard:
+  # 后端提供商类型
+  # 可以是任意字符串，只要远程配置 JSON 的 panels 对象中有对应的键名
+  # 例如: mihomo, 或自定义的任何名称
+  provider: mihomo
+
+  # 远程配置源
+  remote_config:
+    sources:
+      # 主配置源（重定向服务）
+      - name: redirect
+        url: https://pay.wujie-pay.top/config.json
+        priority: 100
+
+      # 备用配置源（Gitee加密源，可选）
+      - name: gitee
+        url: https://gitee.com/wjapi/xbcom/raw/master/config.txt
+        priority: 95
+        # Gitee源需要提供AES-GCM加密密钥（Base64格式）
+        encryption_key: p4ThZ7g8Em2V6t9pQmV2PqPZzS4bcx0oZRbh7j4HGxw=
+
+      # 备用配置源（gist加密源，可选）
+      - name: gitee
+        url: https://gist.githubusercontent.com/limitless-net/fee222493c4fb51de79ac2feba1e3509/raw/config.txt
+        priority: 90
+        # Gitee源需要提供AES-GCM加密密钥（Base64格式）
+        encryption_key: p4ThZ7g8Em2V6t9pQmV2PqPZzS4bcx0oZRbh7j4HGxw=
+
+      # 备用配置源（oss加密源，可选）
+      - name: gitee
+        url: https://wjsd01.oss-cn-beijing.aliyuncs.com/config.txt
+        priority: 85
+        # Gitee源需要提供AES-GCM加密密钥（Base64格式）
+        encryption_key: p4ThZ7g8Em2V6t9pQmV2PqPZzS4bcx0oZRbh7j4HGxw=
+
+      # 备用配置源（CF Worker 自定义域名，兜底）
+      - name: redirect
+        url: https://wujie-zz.top/config.json
+        priority: 80
+
+  # 应用信息
+  app:
+    # 登录页面显示的标题
+    title: 无界
+
+    # 登录页面显示的网站地址
+    website: 官网：https://wujie-b.com
+
+  # ================================================================
+  # 品牌定制（打包时自动替换应用名称和图标）
+  # 运行 dart run branding.dart 即可全自动应用以下配置
+  # ================================================================
+  branding:
+    # 应用显示名称（用户看到的名称，如"无界VPN"）
+    app_name: 无界
+
+    # 应用英文名称（用于 exe 文件名、CMake 项目名、User-Agent 等）
+    # ℹ️ Windows 可执行文件名不宜用中文，建议使用英文
+    app_name_en: Wujie
+
+    # 应用包名/标识符（反域名格式，如 com.example.myvpn）com.follow.clash
+    # ⚠️ 修改包名后 Android 会被视为全新应用，需要卸载旧版后重新安装
+    package_id: com.wujie.wj
+
+    # 自定义图标目录（放入以下文件即可自动替换所有平台图标）
+    # 相对于项目根目录，默认为 assets/branding/
+    # 需要准备的图标文件：
+    #   icon.png          — 1024x1024 主图标（必须，会自动生成所有平台需要的尺寸）
+    #   icon.ico          — Windows ICO 图标（可选，不提供则使用 icon.png 转换）
+    #   icon_white.png    — 托盘白色图标（可选）
+    #   icon_black.png    — 托盘黑色图标（可选）
+    #   icon_white.ico    — 托盘白色ICO图标（可选）
+    #   icon_black.ico    — 托盘黑色ICO图标（可选）
+    icon_dir: assets/branding
+
+    # 应用版本号（格式: major.minor.patch+buildNumber）
+    # 运行 branding.dart 时会自动更新 pubspec.yaml 中的 version 字段
+    # 修改此处后执行 dart run branding.dart 即可，无需手动查找代码
+    version: 2.6.2+2026021901
+
+  # 订阅配置
+  subscription:
+    # 是否优先使用加密订阅
+    # true: 优先尝试加密订阅（自动启用竞速），失败后自动回退到普通订阅
+    # false: 直接使用普通订阅（不使用竞速）
+    prefer_encrypt: false
+
+    # 订阅解密密钥
+    # 用于解密加密订阅数据，需要与后端XBoard面板配置一致
+    # 这是AES-256-CBC加密的密钥，建议使用32位随机字符串
+    decrypt_key: p4ThZ7g8Em2V6t9pQmV2PqPZzS4bcx0oZRbh7j4HGxw=
+
+  # 安全与加密配置
+  security:
+    # 响应混淆前缀（需要与后端 Caddy 反代配置保持一致）
+    # 例如 Caddy 配置：replace "{\"status\"" "YOUR_PREFIX_{\"status\""
+    # SDK 会自动检测响应是否包含此前缀，有则反混淆，无则直接解析
+    # 如果后端没有使用混淆，设置为空字符串或 null
+    obfuscation_prefix: OBFS_PREFIX__
+
+    # User-Agent 配置（域名竞速专用）
+    # ⚠️ 重要：这些UA字符串与后端约定，修改可能导致功能异常
+    user_agents:
+      # API请求/域名竞速 UA（包含加密字符串用于 Caddy 认证）
+      # 加密部分应与你的后端配置一致
+      api_encrypted: Mozilla/5.0 (compatible; RmxDbGFzaC1XdWppZS1BUEkvMS4w)
+
+      # 域名竞速测试 UA
+      domain_racing_test: FlClash/1.0 (Domain Racing Test)
+
+      # 域名竞速加密 UA
+      domain_racing_encrypted: FlClash/1.0 (Domain Racing Encrypted)
+
+    # TLS 证书配置
+    certificate:
+      # 证书文件路径（相对于 packages 目录）
+      path: flutter_xboard_sdk/assets/cer/client-cert.crt
+
+      # 是否启用证书验证
+      enabled: true

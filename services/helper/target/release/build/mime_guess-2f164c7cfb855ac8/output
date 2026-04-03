@@ -1,0 +1,1 @@
+cargo:rustc-env=MIME_TYPES_GENERATED_PATH=C:\Users\74258\Desktop\VPN_wujie\Xboard-Mihomo\services\helper\target\release\build\mime_guess-2f164c7cfb855ac8\out\mime_types_generated.rs

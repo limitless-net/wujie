@@ -1,0 +1,249 @@
+import 'package:fl_clash/enum/enum.dart';
+import 'package:fl_clash/models/models.dart';
+import 'package:fl_clash/providers/providers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fl_clash/xboard/features/latency/services/auto_latency_service.dart';
+import 'package:fl_clash/xboard/features/shared/widgets/node_picker_sheet.dart';
+import 'package:fl_clash/l10n/l10n.dart';
+
+/// 紧凑节点选择器 — 显示当前节点名+延迟，点击展开完整节点列表
+class CompactNodeSelector extends ConsumerStatefulWidget {
+  const CompactNodeSelector({super.key});
+
+  @override
+  ConsumerState<CompactNodeSelector> createState() => _CompactNodeSelectorState();
+}
+
+class _CompactNodeSelectorState extends ConsumerState<CompactNodeSelector> {
+  final GlobalKey _pillKey = GlobalKey();
+
+  Rect? _getPillRect() {
+    final box = _pillKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return null;
+    final offset = box.localToGlobal(Offset.zero);
+    return offset & box.size;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final groups = ref.watch(groupsProvider);
+    final selectedMap = ref.watch(selectedMapProvider);
+    final mode = ref.watch(
+      patchClashConfigProvider.select((state) => state.mode),
+    );
+
+    if (groups.isEmpty) {
+      return _buildEmptyState(context);
+    }
+
+    Group? currentGroup;
+    Proxy? currentProxy;
+
+    if (mode == Mode.global) {
+      currentGroup = groups.firstWhere(
+        (group) => group.name == GroupName.GLOBAL.name,
+        orElse: () => groups.first,
+      );
+    } else if (mode == Mode.rule) {
+      for (final group in groups) {
+        if (group.hidden == true) continue;
+        if (group.name == GroupName.GLOBAL.name) continue;
+        final selectedProxyName = selectedMap[group.name];
+        if (selectedProxyName != null && selectedProxyName.isNotEmpty) {
+          final referencedGroup = groups.firstWhere(
+            (g) => g.name == selectedProxyName,
+            orElse: () => group,
+          );
+          if (referencedGroup.name == selectedProxyName &&
+              referencedGroup.type == GroupType.URLTest) {
+            currentGroup = referencedGroup;
+            break;
+          } else {
+            currentGroup = group;
+            break;
+          }
+        }
+      }
+      if (currentGroup == null) {
+        currentGroup = groups.firstWhere(
+          (group) =>
+              group.hidden != true && group.name != GroupName.GLOBAL.name,
+          orElse: () => groups.first,
+        );
+        if (currentGroup.now != null && currentGroup.now!.isNotEmpty) {
+          final nowValue = currentGroup.now!;
+          final referencedGroup = groups.firstWhere(
+            (g) => g.name == nowValue,
+            orElse: () => currentGroup!,
+          );
+          if (referencedGroup.name == nowValue &&
+              referencedGroup.type == GroupType.URLTest) {
+            currentGroup = referencedGroup;
+          }
+        }
+      }
+    }
+
+    if (currentGroup == null || currentGroup.all.isEmpty) {
+      return _buildEmptyState(context);
+    }
+
+    final selectedProxyName = selectedMap[currentGroup.name] ?? "";
+    String realNodeName;
+    if (currentGroup.type == GroupType.URLTest) {
+      realNodeName = currentGroup.now ?? "";
+    } else {
+      realNodeName = currentGroup.getCurrentSelectedName(selectedProxyName);
+    }
+
+    if (realNodeName.isNotEmpty) {
+      currentProxy = currentGroup.all.firstWhere(
+        (proxy) => proxy.name == realNodeName,
+        orElse: () => currentGroup!.all.first,
+      );
+    } else {
+      currentProxy = currentGroup.all.first;
+    }
+
+    return _buildNodePill(context, currentProxy);
+  }
+
+  Widget _buildNodePill(BuildContext context, Proxy proxy) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // 获取延迟
+    final delayState = ref.watch(getDelayProvider(
+      proxyName: proxy.name,
+      testUrl: ref.read(appSettingProvider).testUrl,
+    ));
+
+    // 延迟颜色
+    Color latencyColor;
+    String latencyText;
+    if (delayState == null) {
+      latencyColor = colorScheme.onSurface.withValues(alpha: 0.4);
+      latencyText = '--';
+    } else if (delayState == 0) {
+      latencyColor = colorScheme.primary;
+      latencyText = '...';
+    } else if (delayState < 0) {
+      latencyColor = Colors.red;
+      latencyText = AppLocalizations.of(context).xboardTimeout;
+    } else if (delayState < 100) {
+      latencyColor = Colors.green;
+      latencyText = '${delayState}ms';
+    } else if (delayState < 300) {
+      latencyColor = Colors.orange;
+      latencyText = '${delayState}ms';
+    } else {
+      latencyColor = Colors.red;
+      latencyText = '${delayState}ms';
+    }
+
+    return GestureDetector(
+      key: _pillKey,
+      onTap: () {
+        showNodePickerSheet(context, ref, _getPillRect());
+      },
+      onLongPress: () {
+        autoLatencyService.testProxy(proxy, forceTest: true);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.08)
+              : Colors.black.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.black.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.location_on_outlined,
+              size: 16,
+              color: colorScheme.primary,
+            ),
+            const SizedBox(width: 6),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 150),
+              child: Text(
+                proxy.name,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              latencyText,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: latencyColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              Icons.expand_more_rounded,
+              size: 18,
+              color: colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return GestureDetector(
+      key: _pillKey,
+      onTap: () {
+        showNodePickerSheet(context, ref, _getPillRect());
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white.withValues(alpha: 0.08)
+              : Colors.black.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.wifi_off_rounded,
+              size: 16,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              AppLocalizations.of(context).xboardNoAvailableNodes,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              Icons.expand_more_rounded,
+              size: 18,
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

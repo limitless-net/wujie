@@ -1,0 +1,115 @@
+# XBoard 中国反代 — Caddy 配置
+# 
+# 部署位置: 阿里云服务器 (47.120.26.96)
+# 用途: 让中国用户通过中国IP访问 XBoard 面板（充值/注册/管理）
+# 
+# ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+# │ 中国用户浏览器   │────→│ 阿里云反代        │────→│ 海外面板真实服务器│
+# │                 │     │ 47.120.26.96:8443│     │ (爪云/Vultr)    │
+# └─────────────────┘     └──────────────────┘     └─────────────────┘
+#
+# === 使用方式 ===
+#
+# 方案A: 纯IP访问（无需ICP备案）
+#   用户访问: https://47.120.26.96:8443
+#   ✅ 无需备案 ✅ 不会被SNI审查 ✅ 中国IP速度快
+#   ❌ URL难记 ❌ 浏览器会提示证书警告（自签名）
+#
+# 方案B: 域名绑定（需要ICP备案）
+#   域名解析到 47.120.26.96
+#   用户访问: https://pay.yoursite.com
+#   ✅ URL友好 ✅ 自动HTTPS证书 ✅ 中国IP速度快
+#   ❌ 需要ICP备案（否则阿里云封80/443端口）
+#
+# 方案C: 域名+非标端口（规避ICP）
+#   域名解析到 47.120.26.96
+#   用户访问: https://pay.yoursite.com:8443
+#   ✅ 无需ICP备案（非标端口不检查） ✅ 中国IP速度快
+#   ⚠️  部分ISP可能封非标端口 ⚠️  URL带端口
+#
+# === 安装 ===
+#
+# 1. 在阿里云安全组开放 8443 端口
+# 2. 将此文件放到阿里云服务器: /etc/caddy/Caddyfile.website
+# 3. 合并到现有 Caddyfile 或单独运行:
+#    caddy run --config /etc/caddy/Caddyfile.website
+#
+# === 重要: 修改下方变量 ===
+
+# ============================================================
+# 方案A: 纯IP访问（自签名证书，推荐先用这个测试）
+# ============================================================
+
+:8443 {
+    # 自签名TLS证书（因为IP没有域名证书）
+    tls internal
+
+    # 反向代理到真实面板服务器
+    # ⬇️ 修改为你的面板真实地址 ⬇️
+    reverse_proxy https://你的面板域名或IP {
+        # 保留原始Host头，让面板识别请求
+        header_up Host {upstream_hostport}
+
+        # 信任上游SSL证书
+        transport http {
+            tls_insecure_skip_verify
+        }
+
+        # 超时设置
+        dial_timeout 10s
+        read_timeout 30s
+        write_timeout 30s
+    }
+
+    # 添加安全头
+    header {
+        X-Real-IP {remote_host}
+        X-Forwarded-For {remote_host}
+        X-Forwarded-Proto https
+        # 移除敏感头
+        -Server
+    }
+
+    # 日志
+    log {
+        output file /var/log/caddy/website-proxy.log {
+            roll_size 10mb
+            roll_keep 3
+        }
+    }
+}
+
+# ============================================================
+# 方案B/C: 域名访问（需要域名+DNS解析）
+# 取消下方注释并注释上方 :8443 块即可切换
+# ============================================================
+
+# # 方案B: 标准端口（需ICP备案）
+# pay.yoursite.com {
+#     reverse_proxy https://你的面板域名或IP {
+#         header_up Host {upstream_hostport}
+#         transport http {
+#             tls_insecure_skip_verify
+#         }
+#     }
+#     header {
+#         X-Real-IP {remote_host}
+#         X-Forwarded-For {remote_host}
+#         X-Forwarded-Proto https
+#     }
+# }
+
+# # 方案C: 非标端口（规避ICP）
+# pay.yoursite.com:8443 {
+#     reverse_proxy https://你的面板域名或IP {
+#         header_up Host {upstream_hostport}
+#         transport http {
+#             tls_insecure_skip_verify
+#         }
+#     }
+#     header {
+#         X-Real-IP {remote_host}
+#         X-Forwarded-For {remote_host}
+#         X-Forwarded-Proto https
+#     }
+# }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- surface 色背景（暗色），与 Flutter Loading 页一致 -->
+    <item android:drawable="@color/splash_background" />
+    <!-- 应用图标居中 -->
+    <item
+        android:width="64dp"
+        android:height="64dp"
+        android:gravity="center"
+        android:drawable="@drawable/splash_icon" />
+</layer-list>

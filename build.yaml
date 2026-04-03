@@ -1,0 +1,19 @@
+targets:
+  $default:
+    builders:
+      source_gen|combining_builder:
+        options:
+          build_extensions:
+            # lib/models 和 lib/providers
+            '^lib/models/{{}}.dart': 'lib/models/generated/{{}}.g.dart'
+            '^lib/providers/{{}}.dart': 'lib/providers/generated/{{}}.g.dart'
+            # lib/xboard
+            '^lib/xboard/adapter/state/{{}}.dart': 'lib/xboard/adapter/state/generated/{{}}.g.dart'
+            '^lib/xboard/adapter/initialization/{{}}.dart': 'lib/xboard/adapter/initialization/generated/{{}}.g.dart'
+            '^lib/xboard/domain/models/{{}}.dart': 'lib/xboard/domain/models/generated/{{}}.g.dart'
+      freezed:
+        options:
+          build_extensions:
+            '^lib/models/{{}}.dart': 'lib/models/generated/{{}}.freezed.dart'
+            '^lib/xboard/domain/models/{{}}.dart': 'lib/xboard/domain/models/generated/{{}}.freezed.dart'
+            '^lib/xboard/features/initialization/models/{{}}.dart': 'lib/xboard/features/initialization/models/generated/{{}}.freezed.dart'

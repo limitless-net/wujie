@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4527A0"/>
+      <stop offset="50%" style="stop-color:#1565C0"/>
+      <stop offset="100%" style="stop-color:#00ACC1"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000000" flood-opacity="0.20"/>
+    </filter>
+  </defs>
+
+  <!-- 方案三：极光紫蓝 #4527A0 → #1565C0 → #00ACC1 -->
+  <rect x="0" y="0" width="1024" height="1024" rx="220" ry="220" fill="url(#bg)"/>
+
+  <!-- 装饰圆环 -->
+  <circle cx="512" cy="490" r="300" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.08"/>
+  <circle cx="512" cy="490" r="360" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.05"/>
+
+  <!-- 纸飞机 — 占比约70% -->
+  <g filter="url(#shadow)">
+    <polygon points="154,537 870,254 550,575" fill="#ffffff" fill-opacity="0.95"/>
+    <polygon points="550,575 870,254 644,726" fill="#ffffff" fill-opacity="0.72"/>
+    <line x1="550" y1="575" x2="870" y2="254" stroke="#1565C0" stroke-width="2" stroke-opacity="0.2"/>
+    <polygon points="550,575 455,688 644,726" fill="#ffffff" fill-opacity="0.5"/>
+  </g>
+
+  <!-- 飞行轨迹 -->
+  <path d="M90 590 Q115 575 155 555"
+        fill="none" stroke="#ffffff" stroke-width="3" stroke-opacity="0.3" stroke-linecap="round" stroke-dasharray="10,16"/>
+  <path d="M40 640 Q70 620 110 600"
+        fill="none" stroke="#ffffff" stroke-width="2.5" stroke-opacity="0.2" stroke-linecap="round" stroke-dasharray="8,14"/>
+
+  <!-- 速度线 -->
+  <line x1="80" y1="440" x2="200" y2="400" stroke="#ffffff" stroke-width="2.5" stroke-opacity="0.15" stroke-linecap="round"/>
+  <line x1="130" y1="490" x2="230" y2="465" stroke="#ffffff" stroke-width="2" stroke-opacity="0.12" stroke-linecap="round"/>
+</svg>

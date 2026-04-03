@@ -1,0 +1,11 @@
+C:\Users\74258\Desktop\VPN_wujie\Xboard-Mihomo\services\helper\target\release\deps\socket2-abd874630df5f7a7.d: C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\lib.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sockaddr.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\socket.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sockref.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sys\windows.rs
+
+C:\Users\74258\Desktop\VPN_wujie\Xboard-Mihomo\services\helper\target\release\deps\libsocket2-abd874630df5f7a7.rlib: C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\lib.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sockaddr.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\socket.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sockref.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sys\windows.rs
+
+C:\Users\74258\Desktop\VPN_wujie\Xboard-Mihomo\services\helper\target\release\deps\libsocket2-abd874630df5f7a7.rmeta: C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\lib.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sockaddr.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\socket.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sockref.rs C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sys\windows.rs
+
+C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\lib.rs:
+C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sockaddr.rs:
+C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\socket.rs:
+C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sockref.rs:
+C:\Users\74258\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\socket2-0.5.8\src\sys\windows.rs:

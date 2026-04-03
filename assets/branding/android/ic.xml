@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- 纸飞机主体 -->
+    <path
+        android:pathData="M3.4,13.4 L17.5,6.5 L11.9,12.6 Z"
+        android:fillColor="#FFFFFF"/>
+
+    <!-- 阴影面 -->
+    <path
+        android:pathData="M11.9,12.6 L17.5,6.5 L14.7,16.0 Z"
+        android:fillColor="#CCFFFFFF"/>
+
+    <!-- 尾翼 -->
+    <path
+        android:pathData="M11.9,12.6 L10.7,15.3 L14.7,16.0 Z"
+        android:fillColor="#99FFFFFF"/>
+
+</vector>

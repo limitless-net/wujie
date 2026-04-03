@@ -1,0 +1,67 @@
+# XBoard 配置文件示例
+# 复制此文件为 xboard.config.yaml 并修改相应配置
+
+xboard:
+  # 后端提供商类型
+  # 可以是任意字符串，只要远程配置 JSON 的 panels 对象中有对应的键名
+  # 例如: mihomo, 或自定义的任何名称
+  provider: mihomo
+  
+  # 远程配置源
+  remote_config:
+    sources:
+      # 主配置源（重定向服务）
+      - name: redirect
+        url: https://your-redirect-domain.com/api/v1/redirect/domains
+        priority: 100
+      
+      # 备用配置源（Gitee加密源，可选）
+      - name: gitee
+        url: https://gitee.com/your-username/your-repo/raw/branch/config.txt
+        priority: 90
+        # Gitee源需要提供AES-GCM加密密钥（Base64格式）
+        encryption_key: YOUR_BASE64_ENCODED_AES_KEY_HERE==
+
+
+  
+  # 应用信息
+  app:
+    # 登录页面显示的标题
+    title: YourAppName
+    
+    # 登录页面显示的网站地址
+    website: example.com
+  
+  # 订阅配置
+  subscription:
+    # 是否优先使用加密订阅
+    # true: 优先尝试加密订阅（自动启用竞速），失败后自动回退到普通订阅
+    # false: 直接使用普通订阅（不使用竞速）
+    prefer_encrypt: false
+
+    # 订阅解密密钥
+    # 用于解密加密订阅数据，需要与后端XBoard面板配置一致
+    # 这是AES-256-CBC加密的密钥，建议使用32位随机字符串
+    decrypt_key: your_secret_decrypt_key_here
+
+  # 安全与加密配置
+  security:
+    # 响应混淆前缀（需要与后端 Caddy 反代配置保持一致）
+    # 例如 Caddy 配置：replace "{\"status\"" "YOUR_PREFIX_{\"status\""
+    # SDK 会自动检测响应是否包含此前缀，有则反混淆，无则直接解析
+    # 如果后端没有使用混淆，设置为空字符串或 null
+    obfuscation_prefix: YOUR_OBFS_PREFIX_
+    
+    # User-Agent 配置（域名竞速专用）
+    # ⚠️ 重要：这些UA字符串与后端约定，修改可能导致功能异常
+    user_agents:
+      # API请求/域名竞速 UA（包含加密字符串用于 Caddy 认证）
+      # 加密部分应与你的后端配置一致
+      api_encrypted: Mozilla/5.0 (compatible; YOUR_ENCRYPTED_STRING_HERE)
+      
+      # 域名竞速测试 UA
+      domain_racing_test: FlClash/1.0 (Domain Racing Test)
+    
+
+
+

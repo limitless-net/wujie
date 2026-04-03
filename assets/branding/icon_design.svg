@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- 主渐变：深蓝到青色 -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a237e"/>
+      <stop offset="50%" style="stop-color:#0d47a1"/>
+      <stop offset="100%" style="stop-color:#00838f"/>
+    </linearGradient>
+    <!-- 光晕渐变 -->
+    <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" style="stop-color:#4fc3f7;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#0d47a1;stop-opacity:0"/>
+    </radialGradient>
+    <!-- 盾牌渐变 -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#42a5f5"/>
+      <stop offset="100%" style="stop-color:#00e5ff"/>
+    </linearGradient>
+    <!-- 无限符号渐变 -->
+    <linearGradient id="infGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="50%" style="stop-color:#e0f7fa"/>
+      <stop offset="100%" style="stop-color:#ffffff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 背景圆角矩形 -->
+  <rect x="0" y="0" width="1024" height="1024" rx="220" ry="220" fill="url(#bgGrad)"/>
+
+  <!-- 光晕效果 -->
+  <rect x="0" y="0" width="1024" height="1024" rx="220" ry="220" fill="url(#glow)"/>
+
+  <!-- 外圈装饰环（代表连接/网络） -->
+  <circle cx="512" cy="460" r="280" fill="none" stroke="#4fc3f7" stroke-width="2" stroke-opacity="0.15"/>
+  <circle cx="512" cy="460" r="320" fill="none" stroke="#4fc3f7" stroke-width="1.5" stroke-opacity="0.08"/>
+
+  <!-- 盾牌轮廓（VPN 安全感） -->
+  <path d="M512 160
+           C512 160 680 200 760 240
+           C760 240 780 500 760 580
+           C740 660 660 740 512 800
+           C364 740 284 660 264 580
+           C244 500 264 240 264 240
+           C344 200 512 160 512 160Z"
+        fill="none"
+        stroke="url(#shieldGrad)"
+        stroke-width="4"
+        stroke-opacity="0.35"/>
+
+  <!-- 盾牌内部半透明填充 -->
+  <path d="M512 180
+           C512 180 670 218 745 255
+           C745 255 763 495 745 570
+           C727 645 652 720 512 778
+           C372 720 297 645 279 570
+           C261 495 279 255 279 255
+           C354 218 512 180 512 180Z"
+        fill="#1565c0"
+        fill-opacity="0.25"/>
+
+  <!-- ∞ 无限符号（代表"无界"） -->
+  <path d="M512 420
+           C480 380 430 350 380 350
+           C310 350 270 400 270 450
+           C270 500 310 550 380 550
+           C430 550 480 520 512 480
+           C544 520 594 550 644 550
+           C714 550 754 500 754 450
+           C754 400 714 350 644 350
+           C594 350 544 380 512 420Z"
+        fill="none"
+        stroke="url(#infGrad)"
+        stroke-width="36"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- 无限符号内发光 -->
+  <path d="M512 420
+           C480 380 430 350 380 350
+           C310 350 270 400 270 450
+           C270 500 310 550 380 550
+           C430 550 480 520 512 480
+           C544 520 594 550 644 550
+           C714 550 754 500 754 450
+           C754 400 714 350 644 350
+           C594 350 544 380 512 420Z"
+        fill="none"
+        stroke="#ffffff"
+        stroke-width="12"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-opacity="0.6"/>
+
+  <!-- 连接节点光点 -->
+  <circle cx="270" cy="450" r="8" fill="#00e5ff" fill-opacity="0.9"/>
+  <circle cx="754" cy="450" r="8" fill="#00e5ff" fill-opacity="0.9"/>
+  <circle cx="512" cy="420" r="6" fill="#ffffff" fill-opacity="0.8"/>
+  <circle cx="512" cy="480" r="6" fill="#ffffff" fill-opacity="0.8"/>
+
+  <!-- 小光点装饰（代表网络数据流） -->
+  <circle cx="340" cy="380" r="3" fill="#4fc3f7" fill-opacity="0.6"/>
+  <circle cx="684" cy="380" r="3" fill="#4fc3f7" fill-opacity="0.6"/>
+  <circle cx="340" cy="520" r="3" fill="#4fc3f7" fill-opacity="0.5"/>
+  <circle cx="684" cy="520" r="3" fill="#4fc3f7" fill-opacity="0.5"/>
+
+  <!-- "无界" 文字 -->
+  <text x="512" y="720" text-anchor="middle"
+        font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif"
+        font-size="100" font-weight="700"
+        fill="#ffffff" fill-opacity="0.95"
+        letter-spacing="20">无界</text>
+
+  <!-- 底部小标语 -->
+  <text x="512" y="780" text-anchor="middle"
+        font-family="'SF Pro','Segoe UI','Roboto',sans-serif"
+        font-size="36" font-weight="400"
+        fill="#4fc3f7" fill-opacity="0.7"
+        letter-spacing="8">BOUNDLESS</text>
+</svg>
